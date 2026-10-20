@@ -1,7 +1,14 @@
 from pathlib import Path
 
 from pyside_hatch_project import Project
-from tests.util import QM_OUTPUT, QRC_OUTPUT, QRC_SOURCE, TS_SOURCE, UI_OUTPUT, UI_SOURCE
+from tests.util import (
+    QM_OUTPUT,
+    QRC_OUTPUT,
+    QRC_SOURCE,
+    TS_SOURCE,
+    UI_OUTPUT,
+    UI_SOURCE,
+)
 
 
 def _make_project(root: Path, pyproject: str, files: list[str]) -> Project:

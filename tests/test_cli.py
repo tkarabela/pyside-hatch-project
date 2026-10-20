@@ -3,7 +3,15 @@ from pathlib import Path
 import pytest
 
 from pyside_hatch_project import CLI, Project, __version__
-from tests.util import OUTPUTS, QM_OUTPUT, QRC_OUTPUT, TS_SOURCE, UI_OUTPUT, UI_SOURCE, run_python
+from tests.util import (
+    OUTPUTS,
+    QM_OUTPUT,
+    QRC_OUTPUT,
+    TS_SOURCE,
+    UI_OUTPUT,
+    UI_SOURCE,
+    run_python,
+)
 
 
 @pytest.fixture

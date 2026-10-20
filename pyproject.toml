@@ -74,3 +74,10 @@ addopts = ["-m", "not e2e", "--strict-markers"]
 markers = [
     "e2e: end-to-end builds in fresh virtual environments (slow, needs network)",
 ]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

@@ -4,7 +4,14 @@ import tarfile
 import zipfile
 from pathlib import Path
 
-from tests.util import OUTPUTS, QRC_SOURCE, TS_SOURCE, UI_SOURCE, WHEEL_OUTPUTS, run_python
+from tests.util import (
+    OUTPUTS,
+    QRC_SOURCE,
+    TS_SOURCE,
+    UI_SOURCE,
+    WHEEL_OUTPUTS,
+    run_python,
+)
 
 
 def _build(project: Path, kind: str, dist: Path) -> Path:
