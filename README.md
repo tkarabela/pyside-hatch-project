@@ -10,10 +10,14 @@
 
 A Hatch-friendly alternative to `pyside6-project` for managing UI files, resource files and translations.
 This library provides a Hatchling plugin as well as stand-alone CLI tool, both called `pyside-hatch-project`.
+It reimplements a subset of `pyside6-project` functionality.
 
 What this library gives you over `pyside6-project`:
 - Compile `.ui`/`.ts`/`.qrc` as part of a standard Python build, no extra steps needed.
 - Specify paths to `.ui`/`.ts`/`.qrc` using glob patterns in `pyproject.toml`.
+
+If you'd rather just call `pyside6-project` from Hatchling, there is a similar project that does this:
+[hatch-pyside](https://github.com/s-ball/hatch-pyside).
 
 ## Usage
 
@@ -55,7 +59,7 @@ qrc_files = ["src/**/*.qrc"]
 # ]
 ```
 
-From the terminal, you can use the `pyside6-project` compatible commands:
+From the terminal, you can use `pyside6-project` compatible commands:
 
 ```shell
 pyside-hatch-project build    # compile .ui/.ts/.qrc files
