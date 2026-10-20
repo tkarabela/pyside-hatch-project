@@ -10,15 +10,14 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, NoReturn, override
+from importlib.metadata import version
 
 from hatchling.bridge.app import Application
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 from hatchling.plugin import hookimpl
 
-
+__version__ = version("pyside-hatch-project")
 HATCH_PLUGIN_NAME = "pyside-hatch-project"
-
-
 logger = logging.getLogger(HATCH_PLUGIN_NAME)
 
 
@@ -213,6 +212,7 @@ class CLI:
         self.parser = argparse.ArgumentParser()
         self.parser.add_argument("command", choices=[_Command.BUILD, _Command.CLEAN, _Command.LUPDATE])
         self.parser.add_argument("-v", "--verbose", action="store_true", default=False)
+        self.parser.add_argument("-V", "--version", action="version", version=__version__)
 
     def run(self, argv: list[str]) -> int:
         args = self.parser.parse_args(argv)
