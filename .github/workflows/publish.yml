@@ -40,8 +40,8 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           ls dist/
-          test -f "dist/pyside-hatch-project-${version}.tar.gz"
-          test -f "dist/pyside-hatch-project-${version}-py3-none-any.whl"
+          test -f "dist/pyside_hatch_project-${version}.tar.gz"
+          test -f "dist/pyside_hatch_project-${version}-py3-none-any.whl"
 
       - name: Publish
         run: uv publish
