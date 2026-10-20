@@ -11,6 +11,7 @@ authors = [
 ]
 keywords = ["hatch", "hatchling", "pyside6", "qt", "uic", "rcc", "lrelease", "lupdate"]
 classifiers = [
+    "Development Status :: 3 - Alpha",
     "Environment :: Plugins",
     "Framework :: Hatch",
     "Intended Audience :: Developers",
