@@ -1,0 +1,17 @@
+[project]
+name = "dummy-app"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["pyside6-essentials"]
+
+[build-system]
+requires = ["hatchling", "pyside-hatch-project"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dummy_app"]
+
+[tool.hatch.build.hooks.pyside-hatch-project]
+ui_files = ["src/**/*.ui"]
+ts_files = ["src/**/*.ts"]
+qrc_files = ["src/**/*.qrc"]

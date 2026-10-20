@@ -1,3 +1,11 @@
+[![build master branch](https://img.shields.io/github/actions/workflow/status/tkarabela/pyside-hatch-project/ci.yml?branch=master)](https://github.com/tkarabela/pyside-hatch-project/actions)
+[![test code coverage](https://img.shields.io/codecov/c/github/tkarabela/pyside-hatch-project)](https://app.codecov.io/github/tkarabela/pyside-hatch-project)
+[![Static Badge](https://img.shields.io/badge/Pyrefly%20%26%20Ruff-checked-blue?style=flat)](https://github.com/tkarabela/pyside-hatch-project/actions)
+[![PyPI - Version](https://img.shields.io/pypi/v/pyside-hatch-project.svg?style=flat)](https://pypi.org/project/pyside-hatch-project/)
+[![PyPI - Status](https://img.shields.io/pypi/status/pyside-hatch-project.svg?style=flat)](https://pypi.org/project/pyside-hatch-project/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pyside-hatch-project.svg?style=flat)](https://pypi.org/project/pyside-hatch-project/)
+[![PyPI - License](https://img.shields.io/pypi/l/pyside-hatch-project.svg?style=flat)](LICENSE.txt)
+
 # pyside-hatch-project
 
 A Hatch-friendly alternative to `pyside6-project` for managing UI files, resource files and translations.
@@ -53,6 +61,17 @@ From the terminal, you can use the `pyside6-project` compatible commands:
 pyside-hatch-project build    # compile .ui/.ts/.qrc files
 pyside-hatch-project lupdate  # extract strings from .py/.ui files into .ts files
 pyside-hatch-project clean    # remove compilation outputs (ui_*.py, rc_*.py, *.qm)
+```
+
+The compiled files can be `.gitignore`d - the build hook will add them as artifacts explicitly.
+
+## Development
+
+```shell
+uv sync
+uv run pytest           # unit and integration tests
+uv run pytest -m e2e    # end-to-end builds with pip and uv in fresh environments (slow, needs network)
+uv run ruff check && uv run pyrefly check
 ```
 
 ## License

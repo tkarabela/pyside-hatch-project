@@ -8,9 +8,9 @@ import tomllib
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from enum import StrEnum
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any, NoReturn, override
-from importlib.metadata import version
 
 from hatchling.bridge.app import Application
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
@@ -83,8 +83,8 @@ class Project:
         # [tool.pyside-hatch-project]
         # [tool.hatch.build.hooks.pyside-hatch-project]
         for toml_path in (
-                ("tool", "pyside-hatch-project"),
-                ("tool", "hatch", "build", "hooks", HATCH_PLUGIN_NAME),
+            ("tool", "pyside-hatch-project"),
+            ("tool", "hatch", "build", "hooks", HATCH_PLUGIN_NAME),
         ):
             for attribute in ("ui_files", "ts_files", "qrc_files"):
                 for relpath in _traverse_dict(pyproject, toml_path).get(attribute, []):
@@ -101,7 +101,8 @@ class Project:
         src_dir = self.root.joinpath("src")
         source_dir = src_dir if src_dir.exists() else self.root
         return (
-            path for path in sorted(source_dir.rglob("*.py"))
+            path
+            for path in sorted(source_dir.rglob("*.py"))
             if not path.name.startswith(("ui_", "rc_")) and "__pycache__" not in path.parts
         )
 
@@ -144,7 +145,9 @@ class Project:
             self.run_tool("pyside6-lupdate", *input_paths, "-ts", ts)
 
     def run_tool(self, tool_name: str, *args: str | Path) -> None:
-        tool = shutil.which(tool_name, path=sysconfig.get_path("scripts"))
+        # prefer tools installed alongside the running interpreter, but fall back to PATH: pip's isolated
+        # build environment is not a venv, its scripts directory is only made available through PATH
+        tool = shutil.which(tool_name, path=sysconfig.get_path("scripts")) or shutil.which(tool_name)
         if tool is None:
             self.fail(f"{tool_name} not found (is pyside6-essentials installed?)")
         cmd = [tool, *map(str, args)]
@@ -193,8 +196,10 @@ class PysideHatchProjectBuildHook(BuildHookInterface[Any]):
 
     @override
     def initialize(self, version: str, build_data: dict[str, Any]) -> None:
-        output_files = list(self.__project.compile_input_files())
-        build_data["artifacts"].extend(map(str, output_files))
+        project = self.__project
+        output_files = list(project.compile_input_files())
+        # artifacts are gitignore-style patterns relative to the project root, anchored to match only these files
+        build_data["artifacts"].extend(f"/{path.relative_to(project.root).as_posix()}" for path in output_files)
 
     @property
     def __project(self) -> HatchProject:

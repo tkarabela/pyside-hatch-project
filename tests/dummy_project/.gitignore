@@ -1,0 +1,4 @@
+# compiled by pyside-hatch-project; they must still end up in the built distributions
+ui_*.py
+rc_*.py
+*.qm
