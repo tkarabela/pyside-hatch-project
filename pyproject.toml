@@ -1,0 +1,40 @@
+[project]
+name = "pyside-hatch-project"
+dynamic = ["version"]
+requires-python = ">=3.14"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+authors = [
+    { name = "Tomas Karabela", email = "tkarabela@seznam.cz" },
+]
+dependencies = [
+    "hatchling>=1.32.4",
+    "pyside6-essentials>=6.10.1",
+]
+
+[project.scripts]
+pyside-hatch-project = "pyside_hatch_project:main"
+
+[project.entry-points.hatch]
+pyside-hatch-project = "pyside_hatch_project"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.4.0",
+    "ruff>=0.17.1",
+]
+
+[build-system]
+requires = ["hatchling>=1.27", "hatch-vcs>=0.5"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.uv]
+# Rebuild the editable install when the commit or tags change, so the version stays current
+cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
+
+[tool.pyrefly]
+preset = "strict"
