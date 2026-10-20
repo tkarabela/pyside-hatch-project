@@ -39,6 +39,19 @@ def _qrc_output_path(path: Path) -> Path:
     return path.with_name(f"rc_{path.stem}.py")
 
 
+def _tool_failure_hint(returncode: int) -> str:
+    # On Linux, Qt's tools need system libraries that minimal container images (python:*-slim,
+    # ubuntu:*) don't ship: GLib for all of them, plus Kerberos GSSAPI and Brotli for lrelease/lupdate.
+    # A missing one makes the tool exit with 127 and a dynamic linker error that is easy to miss in logs.
+    if returncode == 127 and sys.platform == "linux":
+        return (
+            " - this usually means a shared library is missing; Qt tools on Linux need GLib, and"
+            " lrelease/lupdate also Kerberos GSSAPI and Brotli (Debian/Ubuntu: apt-get install"
+            " libglib2.0-0t64 libgssapi-krb5-2 libbrotli1; use libglib2.0-0 on older releases)"
+        )
+    return ""
+
+
 @dataclass
 class Config:
     files: list[Path] = field(default_factory=list)
@@ -154,7 +167,7 @@ class Project:
         self.debug(f"Running: {cmd}")
         rv = subprocess.run(cmd, check=False).returncode
         if rv != 0:
-            self.fail(f"{' '.join(cmd)} failed with exit code {rv}")
+            self.fail(f"{' '.join(cmd)} failed with exit code {rv}{_tool_failure_hint(rv)}")
 
     def info(self, msg: str) -> None:
         logger.info(msg)

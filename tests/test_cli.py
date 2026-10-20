@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -92,6 +93,34 @@ def test_build_failure(dummy_project: Path, cli: CLI) -> None:
 def test_missing_tool(dummy_project: Path) -> None:
     with pytest.raises(RuntimeError, match="not found"):
         Project(dummy_project).run_tool("pyside6-this-tool-does-not-exist")
+
+
+@pytest.mark.parametrize(
+    ("platform", "returncode", "expect_hint"),
+    [
+        ("linux", 127, True),  # Qt tool can't load libglib-2.0.so.0 (e.g. in a slim container image)
+        ("linux", 1, False),
+        ("win32", 127, False),
+        ("darwin", 127, False),
+    ],
+)
+def test_tool_failure_glib_hint(
+    dummy_project: Path, monkeypatch: pytest.MonkeyPatch, platform: str, returncode: int, expect_hint: bool
+) -> None:
+    def fake_which(cmd: str, path: str | None = None) -> str:
+        return f"/fake/bin/{cmd}"
+
+    def fake_run(cmd: list[str], check: bool) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.CompletedProcess(cmd, returncode)
+
+    monkeypatch.setattr("pyside_hatch_project.shutil.which", fake_which)
+    monkeypatch.setattr("pyside_hatch_project.subprocess.run", fake_run)
+    monkeypatch.setattr("pyside_hatch_project.sys.platform", platform)
+
+    with pytest.raises(RuntimeError, match=f"failed with exit code {returncode}") as exc_info:
+        Project(dummy_project).run_tool("pyside6-uic")
+
+    assert ("libglib2.0" in str(exc_info.value)) == expect_hint
 
 
 def test_version(cli: CLI, capsys: pytest.CaptureFixture[str]) -> None:

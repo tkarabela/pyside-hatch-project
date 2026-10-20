@@ -69,6 +69,17 @@ pyside-hatch-project clean    # remove compilation outputs (ui_*.py, rc_*.py, *.
 
 The compiled files can be `.gitignore`d - the build hook will add them as artifacts explicitly.
 
+## Troubleshooting
+
+**Qt tools fail with exit code 127 on Linux.** Qt's tools need some system libraries on Linux: GLib for all
+of them (`uic`, `rcc`, `lrelease`, `lupdate`), plus Kerberos GSSAPI and Brotli for `lrelease`/`lupdate`.
+Desktop installs and GitHub-hosted runners have them, but minimal container images such as `python:*-slim`
+or `ubuntu:*` don't. Install them in the image, e.g. on Debian/Ubuntu:
+
+```shell
+apt-get install -y libglib2.0-0t64 libgssapi-krb5-2 libbrotli1   # libglib2.0-0 on older releases
+```
+
 ## Development
 
 ```shell
